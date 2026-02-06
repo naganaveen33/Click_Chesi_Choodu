@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Story</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .image-container {
+            margin-bottom: 30px;
+        }
+
+        .image-container img {
+            max-width: 200px;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .text-content {
+            font-size: 18px;
+            color: #333;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            padding: 0 10px;
+        }
+
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .nav-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 16px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            min-width: 200px;
+        }
+
+        .nav-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        .nav-button:active {
+            transform: translateY(0);
+        }
+
+        .page-indicator {
+            margin-top: 30px;
+            font-size: 14px;
+            color: #999;
+        }
+
+        /* Placeholder for when image is not loaded */
+        .image-placeholder {
+            width: 200px;
+            height: 200px;
+            background: #f0f0f0;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="pageContainer">
+        <!-- Content will be dynamically inserted here -->
+    </div>
+
+    <script>
+        // Define all 9 pages with their content
+        const pages = [
+            {
+                id: 1,
+                image: "image1.png", // Replace with your actual image path
+                text: "Welcome to the beginning of your journey! You stand at a crossroads.",
+                buttons: [
+                    { text: "Go Left", nextPage: 2 },
+                    { text: "Go Right", nextPage: 3 }
+                ]
+            },
+            {
+                id: 2,
+                image: "image2.png",
+                text: "You chose the left path and found a mysterious forest.",
+                buttons: [
+                    { text: "Enter the forest", nextPage: 4 },
+                    { text: "Go back", nextPage: 1 }
+                ]
+            },
+            {
+                id: 3,
+                image: "image3.png",
+                text: "You chose the right path and discovered a mountain trail.",
+                buttons: [
+                    { text: "Climb the mountain", nextPage: 5 },
+                    { text: "Return to start", nextPage: 1 }
+                ]
+            },
+            {
+                id: 4,
+                image: "image4.png",
+                text: "Deep in the forest, you find a hidden cave.",
+                buttons: [
+                    { text: "Explore the cave", nextPage: 6 },
+                    { text: "Continue through forest", nextPage: 7 }
+                ]
+            },
+            {
+                id: 5,
+                image: "image5.png",
+                text: "At the mountain peak, you see a beautiful vista.",
+                buttons: [
+                    { text: "Rest here", nextPage: 8 },
+                    { text: "Descend the other side", nextPage: 9 }
+                ]
+            },
+            {
+                id: 6,
+                image: "image6.png",
+                text: "Inside the cave, you discover ancient treasures!",
+                buttons: [
+                    { text: "Start new journey", nextPage: 1 }
+                ]
+            },
+            {
+                id: 7,
+                image: "image7.png",
+                text: "You emerge from the forest into a peaceful meadow.",
+                buttons: [
+                    { text: "Start over", nextPage: 1 }
+                ]
+            },
+            {
+                id: 8,
+                image: "image8.png",
+                text: "You rest and gain wisdom from the mountain spirits.",
+                buttons: [
+                    { text: "Begin again", nextPage: 1 }
+                ]
+            },
+            {
+                id: 9,
+                image: "image9.png",
+                text: "You've completed your journey and found enlightenment!",
+                buttons: [
+                    { text: "Start new adventure", nextPage: 1 }
+                ]
+            }
+        ];
+
+        let currentPageId = 1;
+
+        function renderPage(pageId) {
+            const page = pages.find(p => p.id === pageId);
+            if (!page) return;
+
+            const container = document.getElementById('pageContainer');
+            
+            // Create image element
+            const imageHTML = `
+                <div class="image-container">
+                    <img src="${page.image}" alt="Page ${page.id}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div class="image-placeholder" style="display: none;">Image ${page.id}</div>
+                </div>
+            `;
+
+            // Create text content
+            const textHTML = `<div class="text-content">${page.text}</div>`;
+
+            // Create buttons
+            const buttonsHTML = page.buttons.map(button => 
+                `<button class="nav-button" onclick="navigateToPage(${button.nextPage})">${button.text}</button>`
+            ).join('');
+
+            // Create page indicator
+            const indicatorHTML = `<div class="page-indicator">Page ${page.id} of 9</div>`;
+
+            // Combine all HTML
+            container.innerHTML = `
+                ${imageHTML}
+                ${textHTML}
+                <div class="button-container">
+                    ${buttonsHTML}
+                </div>
+                ${indicatorHTML}
+            `;
+
+            currentPageId = pageId;
+        }
+
+        function navigateToPage(pageId) {
+            // Add fade effect
+            const container = document.getElementById('pageContainer');
+            container.style.animation = 'none';
+            setTimeout(() => {
+                container.style.animation = 'fadeIn 0.5s ease-in';
+                renderPage(pageId);
+            }, 10);
+        }
+
+        // Initialize with first page
+        renderPage(1);
+    </script>
+</body>
+</html>

@@ -13,7 +13,7 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: white;
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -27,7 +27,7 @@
             padding: 40px;
             max-width: 500px;
             width: 100%;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
             text-align: center;
             animation: fadeIn 0.5s ease-in;
         }
@@ -64,9 +64,11 @@
 
         .button-container {
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
+            flex-wrap: wrap;
             gap: 15px;
             align-items: center;
+            justify-content: center;
         }
 
         .nav-button {
@@ -79,7 +81,7 @@
             cursor: pointer;
             transition: all 0.3s ease;
             box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-            min-width: 200px;
+            min-width: 150px;
         }
 
         .nav-button:hover {
@@ -117,7 +119,7 @@
     </div>
 
     <script>
-        // Define all 9 pages with their content
+        // Define all 13 pages with their content
         const pages = [
             {
                 id: 1,
@@ -254,9 +256,6 @@
                 `<button class="nav-button" onclick="navigateToPage(${button.nextPage})">${button.text}</button>`
             ).join('');
 
-            // Create page indicator
-            // const indicatorHTML = `<div class="page-indicator">Page ${page.id} of 9</div>`;
-
             // Combine all HTML
             container.innerHTML = `
                 ${imageHTML}
@@ -264,7 +263,6 @@
                 <div class="button-container">
                     ${buttonsHTML}
                 </div>
-                ${indicatorHTML}
             `;
 
             currentPageId = pageId;

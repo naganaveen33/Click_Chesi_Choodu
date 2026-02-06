@@ -27,7 +27,7 @@
             padding: 40px;
             max-width: 500px;
             width: 100%;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            box-shadow: none;
             text-align: center;
             animation: fadeIn 0.5s ease-in;
         }
@@ -52,6 +52,10 @@
             height: auto;
             border-radius: 10px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .large-image img {
+            max-width: 400px !important;
         }
 
         .text-content {
@@ -240,9 +244,9 @@
 
             const container = document.getElementById('pageContainer');
             
-            // Create image element
+            // Create image element with special class for page 13
             const imageHTML = `
-                <div class="image-container">
+                <div class="image-container ${page.id === 13 ? 'large-image' : ''}">
                     <img src="${page.image}" alt="Page ${page.id}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                     <div class="image-placeholder" style="display: none;">Image ${page.id}</div>
                 </div>

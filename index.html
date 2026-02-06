@@ -115,19 +115,95 @@
             margin: 0 auto 30px;
             color: #999;
         }
+
+        .start-music-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .start-music-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 20px 50px;
+            font-size: 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .start-music-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.7);
+        }
+
+        .hidden {
+            display: none;
+        }
     </style>
 </head>
 <body>
+    <!-- Start Music Overlay -->
+    <div class="start-music-overlay" id="startOverlay">
+        <button class="start-music-button" onclick="startMusic()">Inka start cheddama! </button>
+    </div>
+
     <div class="container" id="pageContainer">
         <!-- Content will be dynamically inserted here -->
     </div>
 
+    <!-- Audio Elements (hidden) -->
+    <audio id="bgMusic" loop>
+        <source src="BGM.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="buttonSound">
+        <source src="button.mp3" type="audio/mpeg">
+    </audio>
+
     <script>
+        // ===== VOLUME SETTINGS (ADJUST THESE VALUES) =====
+        const BGM_VOLUME = 0.5;          // Background music volume (0.0 to 1.0) - currently 50%
+        const BUTTON_SOUND_VOLUME = 0.7; // Button click sound volume (0.0 to 1.0) - currently 70%
+        const BGM_MUTED = false;         // Set to true to mute background music
+        const BUTTON_SOUND_MUTED = false; // Set to true to mute button sounds
+        // ================================================
+
+        // Audio elements
+        const bgMusic = document.getElementById('bgMusic');
+        const buttonSound = document.getElementById('buttonSound');
+
+        // Start music function
+        function startMusic() {
+            if (!BGM_MUTED) {
+                bgMusic.volume = BGM_VOLUME;
+                bgMusic.play().catch(err => console.log('Audio play failed:', err));
+            }
+            document.getElementById('startOverlay').classList.add('hidden');
+        }
+
+        // Play button sound
+        function playButtonSound() {
+            if (!BUTTON_SOUND_MUTED) {
+                buttonSound.currentTime = 0;
+                buttonSound.volume = BUTTON_SOUND_VOLUME;
+                buttonSound.play().catch(err => console.log('Button sound failed:', err));
+            }
+        }
+
         // Define all 13 pages with their content
         const pages = [
             {
                 id: 1,
-                image: "image1.jpg", // Replace with your actual image path
+                image: "image1.jpg",
                 text: "Oye pilla ! neekosam okati chesanu..",
                 buttons: [
                     { text: "enti", nextPage: 2 }
@@ -257,7 +333,7 @@
 
             // Create buttons
             const buttonsHTML = page.buttons.map(button => 
-                `<button class="nav-button" onclick="navigateToPage(${button.nextPage})">${button.text}</button>`
+                `<button class="nav-button" onclick="playButtonSound(); navigateToPage(${button.nextPage})">${button.text}</button>`
             ).join('');
 
             // Combine all HTML
